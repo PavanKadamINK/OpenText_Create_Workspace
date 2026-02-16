@@ -1,0 +1,99 @@
+<mvc:View
+   controllerName="com.sap.winslow.otbulkcreateproject.controller.View1"
+	xmlns:f="sap.f"
+	xmlns:cards="sap.f.cards"
+	xmlns:mvc="sap.ui.core.mvc"
+	xmlns="sap.uxap"
+    xmlns:unified="sap.ui.unified"
+	xmlns:m="sap.m"
+	xmlns:c="sap.suite.ui.microchart"
+	xmlns:layout="sap.ui.layout"
+	xmlns:core="sap.ui.core"
+	xmlns:smartFilterBar="sap.ui.comp.smartfilterbar"
+	xmlns:smartTable="sap.ui.comp.smarttable"
+	xmlns:table="sap.ui.table"
+>
+	<m:Page showHeader="false">
+		<m:VBox fitContainer="true">
+			<smartFilterBar:SmartFilterBar
+            id="iderrorlogSmartFilterBar"
+            entitySet="OTProjectLog"
+            useToolbar="false"
+            search="onSearch"
+            showClearOnFB="true"
+            clear="onClearFilter"
+            enableBasicSearch="false"
+            filterBarExpanded="true"
+            showFilterConfiguration="false"
+            persistencyKey="SmartFilter"   >
+				<smartFilterBar:controlConfiguration>
+					<smartFilterBar:ControlConfiguration key="JobID" index="1" visibleInAdvancedArea="true"/>
+				</smartFilterBar:controlConfiguration>
+			</smartFilterBar:SmartFilterBar>
+			<!-- SmartTable with custom columns -->
+			<smartTable:SmartTable
+    id="idOpentextlogtable"
+    header="OpenText Project Logs"
+    smartFilterId="iderrorlogSmartFilterBar"
+    beforeRebindTable="onBeforeRebindTable"
+    entitySet="OTProjectLog"
+    tableType="ResponsiveTable"
+    useVariantManagement="false"
+    ignoreFromPersonalisation="true"
+    initiallyVisibleFields="ProjectName,JobID,Entity,Status,Message"
+    enableAutoBinding="true"
+    class="sapUiResponsiveMargin"
+    showRowCount="true"
+    demandPopin="true"
+    enableExport="false"
+    enableCopy="false"
+    useTablePersonalisation="false"
+    showTablePersonalisation="false">
+
+    <!-- Custom Toolbar with Buttons -->
+    <smartTable:customToolbar>
+        <m:OverflowToolbar>
+            <m:ToolbarSpacer/>
+            <m:Button text="Upload Excel" icon="sap-icon://upload" type="Emphasized" press="onOpenUploadDialog"/>
+            <m:Button text="Create Workspace" icon="sap-icon://add" type="Accept" press="onCreateOpenTextProject"/>
+        </m:OverflowToolbar>
+    </smartTable:customToolbar>
+
+    <m:Table
+        growing="true"
+        growingThreshold="20"
+        growingScrollToLoad="true"/>
+</smartTable:SmartTable>
+
+		</m:VBox>
+
+        <!-- Upload Dialog -->
+<m:Dialog
+    id="excelUploadDialog"
+    title="Upload Excel File"
+    draggable="true"
+    resizable="true">
+
+    <m:VBox class="sapUiSmallMargin">
+        <unified:FileUploader
+            id="excelUploader"
+            width="100%"
+            placeholder="Choose Excel file..."
+            fileType="xls,xlsx"
+            maximumFileSize="5MB"
+            fileSizeExceed="onFileSizeExceeds" 
+            change="onFileChange"/>
+    </m:VBox>
+
+    <m:beginButton>
+        <m:Button text="Upload" press="onConfirmUpload"/>
+    </m:beginButton>
+
+    <m:endButton>
+        <m:Button text="Cancel" press="onCloseUploadDialog"/>
+    </m:endButton>
+
+</m:Dialog>
+
+	</m:Page>
+</mvc:View>

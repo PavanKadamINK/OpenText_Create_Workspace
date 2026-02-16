@@ -1,0 +1,44 @@
+<core:FragmentDefinition
+    xmlns:m="sap.m"
+    xmlns:core="sap.ui.core"
+    id="idVariantFragment1"
+>
+    <m:Dialog id="projectDialog" title="Select Projects">
+        <m:VBox>
+            <!-- Search / Filter Input -->
+            <m:SearchField id="jobIdFilter" width="50%" class="sapUiMediumMargin" placeholder="Filter by Job ID" liveChange="onJobIdFilterChange"/>
+
+            <m:Table 
+                id="projectTable" 
+                mode="SingleSelectLeft" 
+                items="{ path: '/A_EnterpriseProject' }" 
+                growing="true"
+                growingThreshold="20"
+                growingScrollToLoad="true"
+            >
+                <m:columns>
+                    <m:Column>
+                        <m:Text text="Project Name"/>
+                    </m:Column>
+                    <m:Column>
+                        <m:Text text="Job ID"/>
+                    </m:Column>
+                </m:columns>
+
+                <m:items>
+                    <m:ColumnListItem>
+                        <m:cells>
+                            <m:Text text="{ProjectDescription}"/>
+                            <m:Text text="{YY1_JobID_PPH}"/>
+                        </m:cells>
+                    </m:ColumnListItem>
+                </m:items>
+            </m:Table>
+        </m:VBox>
+
+        <m:buttons>
+            <m:Button text="Create Workspace" press="onConfirmProjects"/>
+            <m:Button text="Close" press="onCloseProjectDialog"/>
+        </m:buttons>
+    </m:Dialog>
+</core:FragmentDefinition>
