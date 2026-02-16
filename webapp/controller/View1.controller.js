@@ -150,15 +150,15 @@ sap.ui.define([
                 oBinding.filter([]);
             }
         },
-        onBeforeRebindTable: function(oEvent) {
-    var oBindingParams = oEvent.getParameter("bindingParams");
+        // onBeforeRebindTable: function (oEvent) {
+        //     var oBindingParams = oEvent.getParameter("bindingParams");
 
-    // Clear existing sorters if needed
-    oBindingParams.sorter = [];
+        //     // Clear existing sorters if needed
+        //     oBindingParams.sorter = [];
 
-    // Use exact property name from metadata
-    oBindingParams.sorter.push(new sap.ui.model.Sorter("CreatedAt", true)); // descending
-},
+        //     // Use exact property name from metadata
+        //     oBindingParams.sorter.push(new sap.ui.model.Sorter("CreatedAt", true)); // descending
+        // },
 
 
 

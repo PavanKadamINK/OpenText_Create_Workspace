@@ -4,7 +4,7 @@
 	xmlns:cards="sap.f.cards"
 	xmlns:mvc="sap.ui.core.mvc"
 	xmlns="sap.uxap"
-    xmlns:unified="sap.ui.unified"
+	xmlns:unified="sap.ui.unified"
 	xmlns:m="sap.m"
 	xmlns:c="sap.suite.ui.microchart"
 	xmlns:layout="sap.ui.layout"
@@ -49,33 +49,113 @@
     enableCopy="false"
     useTablePersonalisation="false"
     showTablePersonalisation="false">
-
-    <!-- Custom Toolbar with Buttons -->
-    <smartTable:customToolbar>
-        <m:OverflowToolbar>
-            <m:ToolbarSpacer/>
-            <m:Button text="Upload Excel" icon="sap-icon://upload" type="Emphasized" press="onOpenUploadDialog"/>
-            <m:Button text="Create Workspace" icon="sap-icon://add" type="Accept" press="onCreateOpenTextProject"/>
-        </m:OverflowToolbar>
-    </smartTable:customToolbar>
-
-    <m:Table
-        growing="true"
-        growingThreshold="20"
-        growingScrollToLoad="true"/>
-</smartTable:SmartTable>
-
+				<!-- Custom Toolbar with Buttons -->
+				<smartTable:customToolbar>
+					<m:OverflowToolbar>
+						<m:ToolbarSpacer/>
+						<m:Button text="Upload Excel" icon="sap-icon://upload" type="Emphasized" press="onOpenUploadDialog"/>
+						<m:Button text="Create Workspace" icon="sap-icon://add" type="Accept" press="onCreateOpenTextProject"/>
+					</m:OverflowToolbar>
+				</smartTable:customToolbar>
+				<m:Table growing="true" growingThreshold="20" growingScrollToLoad="true">
+					<m:columns>
+						<m:Column
+                                            hAlign="Begin"
+                                            demandPopin="true"
+                                        >
+							<m:customData>
+								<core:CustomData
+                                                    key="p13nData"
+                                                    value='\{"columnKey": "ProjectName", "leadingProperty": "ProjectName", "sortProperty": "ProjectName", "filterProperty": "ProjectName", "columnIndex": 1}'
+                                                />
+							</m:customData>
+							<m:Text
+                                                text="Project Name"
+                                            />
+						</m:Column>
+						<m:Column
+                                            hAlign="Begin"
+                                            demandPopin="true"
+                                        >
+							<m:customData>
+								<core:CustomData
+                                                    key="p13nData"
+                                                    value='\{"columnKey": "JobID", "leadingProperty": "JobID", "sortProperty": "JobID", "filterProperty": "JobID", "columnIndex": 2}'
+                                                />
+							</m:customData>
+							<m:Text text="Job ID" />
+						</m:Column>
+						<m:Column
+                                            hAlign="Begin"
+                                            minScreenWidth="Tablet"
+                                            demandPopin="true"
+                                        >
+							<m:customData>
+								<core:CustomData
+                                                    key="p13nData"
+                                                    value='\{"columnKey": "Entity", "leadingProperty": "Entity", "sortProperty": "Entity", "filterProperty": "Entity", "columnIndex": 3}'
+                                                />
+							</m:customData>
+							<m:Text
+                                                text="Entity"
+                                            />
+						</m:Column>
+						<m:Column
+                                            minScreenWidth="Tablet"
+                                            demandPopin="true"
+                                        >
+							<m:customData>
+								<core:CustomData
+                                                    key="p13nData"
+                                                    value='\{"columnKey": "Status", "leadingProperty": "Status", "sortProperty": "Status", "filterProperty": "Status", "columnIndex": 4}'
+                                                />
+							</m:customData>
+							<m:Text
+                                                text="{i18n>Status}"
+                                            />
+						</m:Column>
+						<m:Column
+                                            hAlign="Begin"
+                                            minScreenWidth="Tablet"
+                                            demandPopin="true"
+                                            width="40%"
+                                        >
+							<m:customData>
+								<core:CustomData 
+                                                    key="p13nData"
+                                                    value='\{"columnKey": "Message", "leadingProperty": "Message", "sortProperty": "Message", "filterProperty": "Message", "columnIndex": 5}'
+                                                />
+							</m:customData>
+							<m:Text
+                                                text="{i18n>Message}"
+                                            />
+						</m:Column>
+					</m:columns>
+					<m:items>
+						<m:ColumnListItem
+                                            type="Active"
+                                            press="onItemPress"
+                                        >
+							<m:cells>
+								<m:Text text="{ProjectName}"/>
+								<m:Text text="{JobID}"/>
+								<m:Text text="{Entity}"/>
+								<m:Text text="{Status}"/>
+								<m:ExpandableText text="{Message}" maxCharacters="50"/>
+							</m:cells>
+						</m:ColumnListItem>
+					</m:items>
+				</m:Table>
+			</smartTable:SmartTable>
 		</m:VBox>
-
-        <!-- Upload Dialog -->
-<m:Dialog
+		<!-- Upload Dialog -->
+		<m:Dialog
     id="excelUploadDialog"
     title="Upload Excel File"
     draggable="true"
     resizable="true">
-
-    <m:VBox class="sapUiSmallMargin">
-        <unified:FileUploader
+			<m:VBox class="sapUiSmallMargin">
+				<unified:FileUploader
             id="excelUploader"
             width="100%"
             placeholder="Choose Excel file..."
@@ -83,17 +163,13 @@
             maximumFileSize="5MB"
             fileSizeExceed="onFileSizeExceeds" 
             change="onFileChange"/>
-    </m:VBox>
-
-    <m:beginButton>
-        <m:Button text="Upload" press="onConfirmUpload"/>
-    </m:beginButton>
-
-    <m:endButton>
-        <m:Button text="Cancel" press="onCloseUploadDialog"/>
-    </m:endButton>
-
-</m:Dialog>
-
+			</m:VBox>
+			<m:beginButton>
+				<m:Button text="Upload" press="onConfirmUpload"/>
+			</m:beginButton>
+			<m:endButton>
+				<m:Button text="Cancel" press="onCloseUploadDialog"/>
+			</m:endButton>
+		</m:Dialog>
 	</m:Page>
 </mvc:View>
