@@ -12,7 +12,7 @@
       "service": "sap-approuter-userapi",
       "authenticationType": "xsuaa"
     },
-      {
+    {
       "source": "^/v2/(.*)$",
       "target": "/v2/$1",
       "destination": "BMSPortal_API",

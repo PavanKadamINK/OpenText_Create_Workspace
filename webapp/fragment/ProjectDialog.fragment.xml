@@ -10,7 +10,7 @@
 
             <m:Table 
                 id="projectTable" 
-                mode="SingleSelectLeft" 
+                mode="MultiSelect" 
                 items="{ path: '/A_EnterpriseProject' }" 
                 growing="true"
                 growingThreshold="20"
@@ -18,18 +18,18 @@
             >
                 <m:columns>
                     <m:Column>
-                        <m:Text text="Project Name"/>
+                        <m:Text text="Job ID"/>
                     </m:Column>
                     <m:Column>
-                        <m:Text text="Job ID"/>
+                        <m:Text text="Project Name"/>
                     </m:Column>
                 </m:columns>
 
                 <m:items>
                     <m:ColumnListItem>
                         <m:cells>
-                            <m:Text text="{ProjectDescription}"/>
                             <m:Text text="{YY1_JobID_PPH}"/>
+                            <m:Text text="{ProjectDescription}"/>
                         </m:cells>
                     </m:ColumnListItem>
                 </m:items>

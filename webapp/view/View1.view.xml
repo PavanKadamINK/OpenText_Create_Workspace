@@ -16,39 +16,68 @@
 	<m:Page showHeader="false">
 		<m:VBox fitContainer="true">
 			<smartFilterBar:SmartFilterBar
-            id="iderrorlogSmartFilterBar"
-            entitySet="OTProjectLog"
-            useToolbar="false"
-            search="onSearch"
-            showClearOnFB="true"
-            clear="onClearFilter"
-            enableBasicSearch="false"
-            filterBarExpanded="true"
-            showFilterConfiguration="false"
-            persistencyKey="SmartFilter"   >
+				id="iderrorlogSmartFilterBar"
+				entitySet="OTProjectLog"
+				useToolbar="false"
+				search="onSearch"
+				showClearOnFB="true"
+				clear="onClearFilter"
+				enableBasicSearch="false"
+				filterBarExpanded="true"
+				showFilterConfiguration="false"
+				persistencyKey="SmartFilter">
+
 				<smartFilterBar:controlConfiguration>
-					<smartFilterBar:ControlConfiguration key="JobID" index="1" visibleInAdvancedArea="true"/>
+
+					<smartFilterBar:ControlConfiguration
+						key="JobID"
+						index="1"
+						visibleInAdvancedArea="true"/>
+
+					<smartFilterBar:ControlConfiguration
+						key="Status"
+						label="Status"
+						index="2"
+						visibleInAdvancedArea="true">
+
+						<smartFilterBar:customControl>
+							<m:ComboBox
+								id="statusComboBox"
+								width="200px"
+								placeholder="Select Status"
+								showClearIcon="true"
+								selectionChange="onStatusChange">
+
+								<core:Item key="SUCCESS" text="SUCCESS"/>
+								<core:Item key="ERROR" text="ERROR"/>
+
+							</m:ComboBox>
+						</smartFilterBar:customControl>
+
+					</smartFilterBar:ControlConfiguration>
+
 				</smartFilterBar:controlConfiguration>
 			</smartFilterBar:SmartFilterBar>
+
 			<!-- SmartTable with custom columns -->
 			<smartTable:SmartTable
-    id="idOpentextlogtable"
-    header="OpenText Project Logs"
-    smartFilterId="iderrorlogSmartFilterBar"
-    beforeRebindTable="onBeforeRebindTable"
-    entitySet="OTProjectLog"
-    tableType="ResponsiveTable"
-    useVariantManagement="false"
-    ignoreFromPersonalisation="true"
-    initiallyVisibleFields="ProjectName,JobID,Entity,Status,Message"
-    enableAutoBinding="true"
-    class="sapUiResponsiveMargin"
-    showRowCount="true"
-    demandPopin="true"
-    enableExport="false"
-    enableCopy="false"
-    useTablePersonalisation="false"
-    showTablePersonalisation="false">
+				id="idOpentextlogtable"
+				header="OpenText Project Logs"
+				smartFilterId="iderrorlogSmartFilterBar"
+				beforeRebindTable="onBeforeRebindTable"
+				entitySet="OTProjectLog"
+				tableType="ResponsiveTable"
+				useVariantManagement="false"
+				ignoreFromPersonalisation="true"
+				initiallyVisibleFields="ProjectName,JobID,Entity,Status,Message"
+				enableAutoBinding="true"
+				class="sapUiResponsiveMargin"
+				showRowCount="true"
+				demandPopin="true"
+				enableExport="false"
+				enableCopy="false"
+				useTablePersonalisation="false"
+				showTablePersonalisation="false">
 				<!-- Custom Toolbar with Buttons -->
 				<smartTable:customToolbar>
 					<m:OverflowToolbar>

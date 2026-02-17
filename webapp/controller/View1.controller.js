@@ -1,7 +1,9 @@
 sap.ui.define([
     "sap/ui/core/mvc/Controller",
-    "sap/m/MessageToast"
-], function (Controller, MessageToast) {
+    "sap/m/MessageToast",
+     "sap/ui/model/Filter",
+    "sap/ui/model/FilterOperator" 
+], function (Controller, MessageToast,Filter,FilterOperator) {
     "use strict";
 
     return Controller.extend("com.sap.winslow.otbulkcreateproject.controller.View1", {
@@ -10,21 +12,17 @@ sap.ui.define([
             this._selectedFile = null;
             this.excelData = [];
         },
-
         onOpenUploadDialog: function () {
             var oUploader = this.byId("excelUploader");
             if (oUploader) oUploader.clear();
             this._selectedFile = null;
             this.byId("excelUploadDialog").open();
         },
-
         onCloseUploadDialog: function () {
             this.byId("excelUploadDialog").close();
         },
-
         onCreateOpenTextProject: function () {
             var that = this;
-
             if (!this._oProjectDialog) {
                 sap.ui.core.Fragment.load({
                     id: this.getView().getId(),
@@ -37,23 +35,33 @@ sap.ui.define([
 
                     var oTable = that.byId("projectTable");
                     if (oTable) oTable.removeSelections();
+                    this.byId("jobIdFilter").setValue("");
                 });
             } else {
                 this._openProjectDialog();
                 var oTable = that.byId("projectTable");
                 if (oTable) oTable.removeSelections();
+                this.byId("jobIdFilter").setValue("");
+
             }
         },
 
         onConfirmProjects: function () {
             var oTable = this.byId("projectTable");
-            var oSelectedItem = oTable.getSelectedItem(); // gets the selected row
-            if (!oSelectedItem) return MessageToast.show("Please select a project first!");
-            // Get the binding context of the selected row
-            var oContext = oSelectedItem.getBindingContext();
-            var sJobID = oContext.getProperty("YY1_JobID_PPH");  // get Job ID
-            this.onBulkCreatePress([String(sJobID)]);
-
+            var aSelectedItems = oTable.getSelectedItems(); // multiple selection
+            // No selection
+            if (aSelectedItems.length === 0) return MessageToast.show("Please select at least one project!");
+            // More than 10 selected
+            if (aSelectedItems.length > 10) return sap.m.MessageBox.error("You can select a maximum of 10 projects only.");
+            // Collect Job IDs
+            var aJobIDs = [];
+            aSelectedItems.forEach(function (oItem) {
+                var oContext = oItem.getBindingContext();
+                var sJobID = oContext.getProperty("YY1_JobID_PPH");
+                aJobIDs.push(String(sJobID));
+            });
+            // Call your function with array of JobIDs
+            this.onBulkCreatePress(aJobIDs);
             this._oProjectDialog.close();
         },
 
@@ -65,7 +73,7 @@ sap.ui.define([
             var oTable = sap.ui.core.Fragment.byId(this.getView().getId(), "projectTable");
             var oBinding = oTable.getBinding("items");
             var aFilters = [
-                new sap.ui.model.Filter("YY1_JobID_PPH", sap.ui.model.FilterOperator.NE, "")
+                new Filter("YY1_JobID_PPH", FilterOperator.NE, "")
             ];
             oBinding.filter(aFilters);
             this._oProjectDialog.open();
@@ -134,31 +142,41 @@ sap.ui.define([
             MessageToast.show("File size exceeds the 5 MB limit. Please choose a smaller file.");
         },
         onJobIdFilterChange: function (oEvent) {
-            const sQuery = oEvent.getParameter("newValue");
-            const oTable = this.byId("projectTable");
-            const oBinding = oTable.getBinding("items");
+            var sQuery = oEvent.getParameter("newValue");
+            var oSearchField = oEvent.getSource();
 
-            if (sQuery) {
-                const oFilter = new sap.ui.model.Filter(
-                    "YY1_JobID_PPH",
-                    sap.ui.model.FilterOperator.Contains,
-                    sQuery
-                );
+            // ✅ Allow only numbers
+            var sNumericQuery = sQuery.replace(/[^0-9]/g, "");
+
+            // Update field if user typed letters
+            if (sQuery !== sNumericQuery) oSearchField.setValue(sNumericQuery);
+            
+            var oTable = this.byId("projectTable");
+            var oBinding = oTable.getBinding("items");
+            if (sNumericQuery) {
+                var oFilter = new Filter("YY1_JobID_PPH",FilterOperator.Contains,sNumericQuery);
                 oBinding.filter([oFilter]);
             } else {
                 // clear filter if input is empty
                 oBinding.filter([]);
             }
         },
-        // onBeforeRebindTable: function (oEvent) {
-        //     var oBindingParams = oEvent.getParameter("bindingParams");
+        onSearch: function () {
+            this.byId("idOpentextlogtable").rebindTable();
+        },
+        onClearFilter: function () {
+            var oComboBox = this.byId("statusComboBox");
+            oComboBox.setSelectedKey("")
+        },
+        onBeforeRebindTable: function (oEvent) {
+            var oBindingParams = oEvent.getParameter("bindingParams");
+            var oComboBox = this.byId("statusComboBox");
+            var sStatus = oComboBox.getSelectedKey(); // SUCCESS / ERROR
+            if (sStatus) oBindingParams.filters.push(new Filter("Status",FilterOperator.EQ,sStatus))
+        },
 
-        //     // Clear existing sorters if needed
-        //     oBindingParams.sorter = [];
 
-        //     // Use exact property name from metadata
-        //     oBindingParams.sorter.push(new sap.ui.model.Sorter("CreatedAt", true)); // descending
-        // },
+
 
 
 
