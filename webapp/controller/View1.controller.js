@@ -1,9 +1,9 @@
 sap.ui.define([
     "sap/ui/core/mvc/Controller",
     "sap/m/MessageToast",
-     "sap/ui/model/Filter",
-    "sap/ui/model/FilterOperator" 
-], function (Controller, MessageToast,Filter,FilterOperator) {
+    "sap/ui/model/Filter",
+    "sap/ui/model/FilterOperator"
+], function (Controller, MessageToast, Filter, FilterOperator) {
     "use strict";
 
     return Controller.extend("com.sap.winslow.otbulkcreateproject.controller.View1", {
@@ -35,13 +35,13 @@ sap.ui.define([
 
                     var oTable = that.byId("projectTable");
                     if (oTable) oTable.removeSelections();
-                    this.byId("jobIdFilter").setValue("");
+                    that.byId("jobIdFilter").setValue("");
                 });
             } else {
                 this._openProjectDialog();
                 var oTable = that.byId("projectTable");
                 if (oTable) oTable.removeSelections();
-                this.byId("jobIdFilter").setValue("");
+                that.byId("jobIdFilter").setValue("");
 
             }
         },
@@ -69,16 +69,6 @@ sap.ui.define([
             this._oProjectDialog.close();
         },
 
-        _openProjectDialog: function () {
-            var oTable = sap.ui.core.Fragment.byId(this.getView().getId(), "projectTable");
-            var oBinding = oTable.getBinding("items");
-            var aFilters = [
-                new Filter("YY1_JobID_PPH", FilterOperator.NE, "")
-            ];
-            oBinding.filter(aFilters);
-            this._oProjectDialog.open();
-        },
-
         onFileChange: function (oEvent) {
             const file = oEvent.getParameter("files")[0];
             this._selectedFile = file;
@@ -103,6 +93,14 @@ sap.ui.define([
                 var excelData = XLSX.utils.sheet_to_json(worksheet);
                 that.excelData = excelData;
                 console.log("Excel Data:", excelData);
+                for (let i = 0; i < excelData.length; i++) {
+                    let jobId = excelData[i]['Job ID'];
+
+                    if (jobId && jobId.toString().length > 5) {
+                        that.byId("excelUploadDialog").close();
+                        return sap.m.MessageBox.error("Error: Job ID length more than 5 at row " + (i + 2));
+                    }
+                }
                 MessageToast.show("Excel read successfully. Rows: " + excelData.length);
             };
             reader.onerror = function (err) {
@@ -122,9 +120,7 @@ sap.ui.define([
         onBulkCreatePress: function (aJobIDs) {
             var oView = this.getView();
             var oModel = oView.getModel();
-
             oView.setBusy(true);
-
             oModel.create("/BulkOTCreation", {
                 JobIDs: aJobIDs
             }, {
@@ -141,25 +137,39 @@ sap.ui.define([
         onFileSizeExceeds: function () {
             MessageToast.show("File size exceeds the 5 MB limit. Please choose a smaller file.");
         },
+        _openProjectDialog: function () {
+            var oTable = sap.ui.core.Fragment.byId(this.getView().getId(), "projectTable");
+            var oBinding = oTable.getBinding("items");
+            var aFilters = [
+                new Filter("YY1_JobID_PPH", FilterOperator.NE, "")
+            ];
+            oBinding.filter(aFilters);
+            this._oProjectDialog.open();
+        },
         onJobIdFilterChange: function (oEvent) {
             var sQuery = oEvent.getParameter("newValue");
             var oSearchField = oEvent.getSource();
 
-            // ✅ Allow only numbers
+            // Allow only numbers
             var sNumericQuery = sQuery.replace(/[^0-9]/g, "");
 
-            // Update field if user typed letters
-            if (sQuery !== sNumericQuery) oSearchField.setValue(sNumericQuery);
-            
-            var oTable = this.byId("projectTable");
-            var oBinding = oTable.getBinding("items");
-            if (sNumericQuery) {
-                var oFilter = new Filter("YY1_JobID_PPH",FilterOperator.Contains,sNumericQuery);
-                oBinding.filter([oFilter]);
-            } else {
-                // clear filter if input is empty
-                oBinding.filter([]);
+            if (sQuery !== sNumericQuery) {
+                oSearchField.setValue(sNumericQuery);
             }
+
+            // ✅ Get table from Fragment
+            var oTable = sap.ui.core.Fragment.byId(this.getView().getId(), "projectTable");
+            var oBinding = oTable.getBinding("items");
+
+            var aFilters = [];
+
+            if (sNumericQuery) {
+                aFilters.push(new Filter("YY1_JobID_PPH", FilterOperator.Contains, sNumericQuery));
+            } else {
+                aFilters.push(new Filter("YY1_JobID_PPH", FilterOperator.NE, ""));
+            }
+
+            oBinding.filter(aFilters); // AND condition by default
         },
         onSearch: function () {
             this.byId("idOpentextlogtable").rebindTable();
@@ -172,14 +182,8 @@ sap.ui.define([
             var oBindingParams = oEvent.getParameter("bindingParams");
             var oComboBox = this.byId("statusComboBox");
             var sStatus = oComboBox.getSelectedKey(); // SUCCESS / ERROR
-            if (sStatus) oBindingParams.filters.push(new Filter("Status",FilterOperator.EQ,sStatus))
+            if (sStatus) oBindingParams.filters.push(new Filter("Status", FilterOperator.EQ, sStatus))
         },
-
-
-
-
-
-
 
     });
 });

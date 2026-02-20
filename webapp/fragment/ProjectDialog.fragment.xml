@@ -8,14 +8,7 @@
             <!-- Search / Filter Input -->
             <m:SearchField id="jobIdFilter" width="50%" class="sapUiMediumMargin" placeholder="Filter by Job ID" liveChange="onJobIdFilterChange"/>
 
-            <m:Table 
-                id="projectTable" 
-                mode="MultiSelect" 
-                items="{ path: '/A_EnterpriseProject' }" 
-                growing="true"
-                growingThreshold="20"
-                growingScrollToLoad="true"
-            >
+            <m:Table id="projectTable" mode="MultiSelect" items="{ path: '/A_EnterpriseProject' }" growing="true" growingThreshold="20" growingScrollToLoad="true">
                 <m:columns>
                     <m:Column>
                         <m:Text text="Job ID"/>
