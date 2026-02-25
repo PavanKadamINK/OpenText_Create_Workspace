@@ -42,7 +42,6 @@ sap.ui.define([
                 var oTable = that.byId("projectTable");
                 if (oTable) oTable.removeSelections();
                 that.byId("jobIdFilter").setValue("");
-
             }
         },
 
@@ -96,9 +95,9 @@ sap.ui.define([
                 for (let i = 0; i < excelData.length; i++) {
                     let jobId = excelData[i]['Job ID'];
 
-                    if (jobId && jobId.toString().length > 5) {
+                    if (jobId && jobId.toString().length !== 5) {
                         that.byId("excelUploadDialog").close();
-                        return sap.m.MessageBox.error("Error: Job ID length more than 5 at row " + (i + 2));
+                        return sap.m.MessageBox.error("Error: Job ID must be exactly 5 characters long at row " + (i + 2));
                     }
                 }
                 MessageToast.show("Excel read successfully. Rows: " + excelData.length);
@@ -122,7 +121,8 @@ sap.ui.define([
             var oModel = oView.getModel();
             oView.setBusy(true);
             oModel.create("/BulkOTCreation", {
-                JobIDs: aJobIDs
+                JobIDs: aJobIDs,
+                QuickCreate:true
             }, {
                 success: function (oData) {
                     oView.setBusy(false);
@@ -180,10 +180,21 @@ sap.ui.define([
         },
         onBeforeRebindTable: function (oEvent) {
             var oBindingParams = oEvent.getParameter("bindingParams");
+
             var oComboBox = this.byId("statusComboBox");
             var sStatus = oComboBox.getSelectedKey(); // SUCCESS / ERROR
-            if (sStatus) oBindingParams.filters.push(new Filter("Status", FilterOperator.EQ, sStatus))
-        },
 
+            // Filter by Status
+            if (sStatus) {
+                oBindingParams.filters.push(
+                    new Filter("Status", FilterOperator.EQ, sStatus)
+                );
+            }
+
+            // Sort by createdAt DESC
+            oBindingParams.sorter = [
+                new sap.ui.model.Sorter("createdAt", true) // true = descending
+            ];
+        },
     });
 });
