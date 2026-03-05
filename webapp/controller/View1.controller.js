@@ -2,12 +2,13 @@ sap.ui.define([
     "sap/ui/core/mvc/Controller",
     "sap/m/MessageToast",
     "sap/ui/model/Filter",
-    "sap/ui/model/FilterOperator"
-], function (Controller, MessageToast, Filter, FilterOperator) {
+    "sap/ui/model/FilterOperator",
+    "../model/formatter"
+], function (Controller, MessageToast, Filter, FilterOperator, Formatter) {
     "use strict";
 
     return Controller.extend("com.sap.winslow.otbulkcreateproject.controller.View1", {
-
+        Formatter: Formatter,
         onInit: function () {
             this._selectedFile = null;
             this.excelData = [];
@@ -122,7 +123,7 @@ sap.ui.define([
             oView.setBusy(true);
             oModel.create("/BulkOTCreation", {
                 JobIDs: aJobIDs,
-                QuickCreate:true
+                QuickCreate: true
             }, {
                 success: function (oData) {
                     oView.setBusy(false);
@@ -196,5 +197,21 @@ sap.ui.define([
                 new sap.ui.model.Sorter("createdAt", true) // true = descending
             ];
         },
+
+        onPressDownloadExcle: function () {
+            // Excel data (only header row)
+            var aData = [{"Job ID": ""}];
+
+            // Create worksheet
+            var ws = XLSX.utils.json_to_sheet(aData);
+
+            // Create workbook
+            var wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "Template");
+
+            // Download Excel file
+            XLSX.writeFile(wb, "Open_Text_Workspace_Template.xlsx");
+        }
+
     });
 });

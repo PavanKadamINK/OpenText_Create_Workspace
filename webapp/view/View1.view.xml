@@ -82,6 +82,7 @@
 				<smartTable:customToolbar>
 					<m:OverflowToolbar>
 						<m:ToolbarSpacer/>
+						<m:Button  text="Excel Template" icon="sap-icon://download" type="Emphasized" press="onPressDownloadExcle"/>
 						<m:Button text="Upload Excel" icon="sap-icon://upload" type="Emphasized" press="onOpenUploadDialog"/>
 						<m:Button text="Create Workspace" icon="sap-icon://add" type="Accept" press="onCreateOpenTextProject"/>
 					</m:OverflowToolbar>
@@ -166,7 +167,7 @@
 								<m:Text text="{ProjectName}"/>
 								<m:Text text="{JobID}"/>
 								<m:Text text="{Entity}"/>
-								<m:Text text="{Status}"/>
+								<m:Text text="{ path: 'Status', formatter: '.Formatter.formatStatusText' }"/>
 								<m:ExpandableText text="{Message}" maxCharacters="50"/>
 							</m:cells>
 						</m:ColumnListItem>
