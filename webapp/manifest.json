@@ -46,10 +46,17 @@
   "sap.ui5": {
     "flexEnabled": true,
     "dependencies": {
-      "minUI5Version": "1.144.1",
+      "minUI5Version": "1.136.20",
       "libs": {
         "sap.m": {},
-        "sap.ui.core": {}
+        "sap.ui.core": {},
+        "sap.ui.comp": {},
+        "sap.ui.export": {},
+        "sap.uxap": {},
+        "sap.f": {},
+        "sap.ui.integration": {},
+        "sap.suite.ui.microchart": {},
+        "sap.ui.layout": {}
       }
     },
     "contentDensities": {
